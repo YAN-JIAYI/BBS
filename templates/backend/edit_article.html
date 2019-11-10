@@ -1,0 +1,69 @@
+{% extends 'backend/backend_base.html' %}
+
+{% block article %}
+    <div>
+        <h2>编辑文章</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            <p>标题</p>
+            <p>
+                <input type="text" name="title" class="form-control" id="title" value="{{ edit_obj.title }}">
+            </p>
+            <p>
+                内容
+            </p>
+            <p>
+                <textarea name="content" id="content" cols="30" rows="10">{{ edit_obj.content }}</textarea>
+
+
+            </p>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">分类</h3>
+                </div>
+                <div class="panel-body">
+                    {% for category in category_list %}
+                        {% if edit_obj.category == category %}
+                            <input type="radio" value="{{ category.pk }}" name="{{ category.name }} ">
+                            {{ category.name }}
+                        {% else %}
+                            <input type="radio" value="{{ category.pk }}" name="category.name ">
+                            {{ category.name }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">标签</h3>
+                </div>
+                <div class="panel-body">
+                    {% for tag in tag_list %}
+                        <input type="checkbox" value="{{ tag.pk }}" name="tag">{{ tag.name }}
+                    {% endfor %}
+                </div>
+            </div>
+            <input type="submit" class="btn btn-success">
+
+        </form>
+
+
+    </div>
+
+
+    <script charset="utf-8" src="/static/kindeditor/kindeditor-all-min.js"></script>
+    <script>
+        KindEditor.ready(function (K) {
+            window.editor = K.create('#content', {
+                width: '100%',
+                height: '400px',
+                uploadJson: '/upload_img/',    //chao这个路径提交post请求
+                extraFileUploadParams: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                }
+            });
+        });
+    </script>
+
+{% endblock %}
